@@ -628,12 +628,18 @@
 
             if (gameState.overall > 99) gameState.overall = 99;
 
+            // Opponents also buy VC - scale based on package size
+            let opponentIncrease = Math.ceil(pkg.ovrGain * 0.3); // 30% of your gain
+            if (opponentIncrease < 1) opponentIncrease = 1; // Minimum 1
+            increaseOpponentOVR(opponentIncrease);
+
             updateStats();
 
             let message = `You purchased ${pkg.vc.toLocaleString()} VC for $${pkg.cost}! Your overall increased to ${gameState.overall}.`;
+            message += ` <div class="alert-box warning">⚠️ While you were buying VC, other players did too! Average opponent OVR increased by +${opponentIncrease} to ${gameState.avgOpponent}.</div>`;
             
             if (gameState.budget < 0 && !gameState.debtWarningShown) {
-                message += ` <div class="alert-box">⚠️ You're now in debt! Be careful with your spending.</div>`;
+                message += ` <div class="alert-box">💳 WARNING: You're now in debt! Be careful with your spending.</div>`;
                 gameState.debtWarningShown = true;
             }
 
